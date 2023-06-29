@@ -723,7 +723,7 @@ kubectl get no
 apiVersion: apps/v1 
 kind: Deployment
 metadata:
-  name: rumeysa-regapp
+  name: emmanuelafamefuna-regapp
   labels: 
      app: regapp
 
