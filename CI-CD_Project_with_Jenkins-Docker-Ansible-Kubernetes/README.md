@@ -1,6 +1,6 @@
 # Jenkins CI/CD Project with Ansible and Kubernetes
 
-*Project Source* : ![](https://www.udemy.com/share/1023P43@TzHtDv17OEytQAPjLwu3e4zLrmxgSAIF0MbMFfhEKzFw7b_BGV_d1gNXdAKXNPxs/)
+ : ![](https://www.udemy.com/share/1023P43@TzHtDv17OEytQAPjLwu3e4zLrmxgSAIF0MbMFfhEKzFw7b_BGV_d1gNXdAKXNPxs/)
   
 ![Project-architecture](project.png)
 ## CI/CD Pipeline using Git,Jenkins and Maven
@@ -56,7 +56,7 @@ echo "Hello World!"
 - Now we can run our Second job to check `Github integration` is working as expected. Create another FreeStyleJob as below:
 ```sh
 SCM: Git
-URL: https://github.com/rumeysakdogan/hello-world.git
+URL: https://github.com/emmanuelafamefuna/hello-world.git
 Save -> Build Now
 ```
 
@@ -202,7 +202,7 @@ pwd: deployer
 - Now we can create our next job with name of `BuildAndDeployJob`. After build step, the artifact will stored under `webapp/target/` directory as `webapp.war`.  
 ```sh
 Kind: Maven Project
-SCM: https://github.com/rumeysakdogan/hello-world.git
+SCM: https://github.com/emmanuelafamefuna/hello-world.git
 Goal and options: clean install
 Post Build Actions: Deploy war/ear to a container
 WAR/EAR files: **/*.war
@@ -346,7 +346,7 @@ provide password
 ```sh
 Name: BuildAndDeployOnContainer
 Type: Maven Project
-SCM: https://github.com/rumeysakdogan/hello-world.git
+SCM: https://github.com/emmanuelafamefuna/hello-world.git
 POLL SCM: * * * * *
 Build Goals: clean install
 Post build actions: Send build artifacts over ssh
@@ -596,8 +596,8 @@ Login Succeeded
 - If we want to push an image to our dockerhub it has to be tagged with our docker username. We can tag an existing image by using `docker tag` command like shown below.
 
 ```sh
-docker tag <image-id> rumeysakdogan/regapp:tagname
-docker push rumeysakdogan/regapp:tagname
+docker tag <image-id> emmanuelafamefuna/regapp:tagname
+docker push emmanuelafamefuna/regapp:tagname
 ```
 
 - Now we can update our playbook to add new tasks.
@@ -611,10 +611,10 @@ docker push rumeysakdogan/regapp:tagname
       args:
         chdir: /opt/docker
     - name: create tag to push image onto dockerhub
-      command: docker tag regapp:latest rumeysakdogan/regapp:latest
+      command: docker tag regapp:latest emmanuelafamefuna/regapp:latest
 
     - name: push docker image
-      command: docker push rumeysadogan/regapp:latest
+      command: docker push emmanuelafamefuna/regapp:latest
 ```
 
 - We can dry-run our playbook by giving `--check` flag.
@@ -642,7 +642,7 @@ exec command: ansible-playbook /opt/docker/regapp.yml
 
   tasks:
     - name: create container
-      command: docker run -d --name regapp-server -p 8082:8080 rumeysakdogan/regapp:latest 
+      command: docker run -d --name regapp-server -p 8082:8080 emmanuelafamefuna/regapp:latest 
 ```
 
 - But we have a problem in this playbook, when we try to run the same playbook again, it will give an error saying `regapp-server container already exists.` To fix this problem, we will add below tasks to our playbook.
@@ -667,11 +667,11 @@ exec command: ansible-playbook /opt/docker/regapp.yml
       ignore_errors: yes
 
     - name: remove the existing image
-      command: docker rmi rumeysakdogan/regapp:latest
+      command: docker rmi emmanuelafamefuna/regapp:latest
       ignore_errors: yes
 
     - name: create container
-      command: docker run -d --name regapp-server -p 8082:8080 rumeysakdogan/regapp:latest 
+      command: docker run -d --name regapp-server -p 8082:8080 emmanuelafamefuna/regapp:latest 
       ignore_errors: yes
 ```
 
@@ -703,7 +703,7 @@ eksctl create cluster --name rd-cluster \
 ```
 - To delete cluster, run below command:
 ```sh
-eksctl delete cluster --name rumeysa-cluster
+eksctl delete cluster --name emmanuelafamefuna-cluster
 ```
 
 ## Integrating Kubernetes with CI/CD pipeline
@@ -740,7 +740,7 @@ spec:
     spec:
       containers:
       - name: regapp
-        image: rumeysakdogan/regapp
+        image: emmanuelafamefuna/regapp
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -927,7 +927,7 @@ Initialize only when build is stable
 - We need to update one more thing in our `kube-deploy.yml` playbook. We need to specify the rollout whenever if new image is pushed to docker hub.
 ```yaml
   - name: update deployment with new pods if image updated in docker hub
-    command: kubectl rollout restart deployment.apps/rumeysa-regapp
+    command: kubectl rollout restart deployment.apps/emmanuelafamefuna-regapp
 ```
 - We can make an update to `index.jsp` in our `hello-world project` under `hello-world/webapp/src/main/webapp/` directory and push our changes to Github. This will trigger both CI&CD jobs triggered successively. 
 
